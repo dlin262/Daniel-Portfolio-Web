@@ -1,3 +1,156 @@
+<style>
+	.swal-content {
+        padding: 0 20px;
+        font-size: medium;
+        margin-left: 16%;
+    }
+
+	.loader {
+        text-align: center;
+        vertical-align: middle;
+        position: relative;
+        display: flex;
+        background: #fff;
+        padding: 50px;
+    }
+
+        .loader span {
+            display: block;
+            width: 20px;
+            height: 20px;
+            background: #000000;
+            border-radius: 50%;
+            margin: 0 5px;
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+        }
+
+            .loader span:nth-child(2) {
+                background: #696969;
+            }
+
+            .loader span:nth-child(3) {
+                background: #808080;
+            }
+
+            .loader span:nth-child(4) {
+                background: #A9A9A9;
+            }
+
+            .loader span:not(:last-child) {
+                animation: animate 1.5s linear infinite;
+            }
+
+    @keyframes animate {
+        0% {
+            transform: translateX(0);
+        }
+
+        100% {
+            transform: translateX(30px);
+        }
+    }
+
+    .loader span:last-child {
+        background: #C0C0C0;
+        animation: jump 1.5s ease-in-out infinite;
+    }
+
+    @keyframes jump {
+        0% {
+            transform: translate(0, 0);
+        }
+
+        10% {
+            transform: translate(10px, -10px);
+        }
+
+        20% {
+            transform: translate(20px, 10px);
+        }
+
+        30% {
+            transform: translate(30px, -50px);
+        }
+
+        70% {
+            transform: translate(-150px, -50px);
+        }
+
+        80% {
+            transform: translate(-140px, 10px);
+        }
+
+        90% {
+            transform: translate(-130px, -10px);
+        }
+
+        100% {
+            transform: translate(-120px, 0);
+        }
+    }
+
+
+	.swal-button {
+        background-color: black;
+        color: #fff;
+        border: none;
+        box-shadow: none !important;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 10px 24px;
+        margin: 0;
+        cursor: pointer;
+    }
+
+	.swal-button:not([disabled]):hover {
+		background-color: black;
+	}
+
+    .swal-button--cancel {
+        background-color: dimgray !important;
+        color: #fff;
+        border: none;
+        box-shadow: none !important;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 12px !important;
+        padding: 10px 24px;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .swal-button--agree {
+        background-color: #4BB543 !important;
+        color: #fff;
+        border: none;
+        box-shadow: none !important;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 12px !important;
+        padding: 10px 24px;
+        margin: 0;
+        cursor: pointer;
+    }
+
+
+    .swal-text {
+        font-size: 16px;
+        position: relative;
+        float: none;
+        line-height: normal;
+        vertical-align: top;
+        text-align: center;
+        display: inline-block;
+        margin: 0;
+        padding: 0 10px;
+        font-weight: 400;
+        color: rgba(0,0,0,.64);
+        max-width: calc(100% - 20px);
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+    }
+</style>
 <!DOCTYPE HTML>
 <!--
 	Dimension by HTML5 UP
@@ -93,7 +246,7 @@
 						<!-- Contact -->
 							<article id="contact">
 								<h2 class="major">Contact</h2>
-								<form action="https://formsubmit.co/heinlin54@email.com" method="POST">
+								<form>
 									<div class="fields">
 										<div class="field half">
 											<label for="name">Name</label>
@@ -110,7 +263,7 @@
 									</div>
 									<ul class="actions">
 										
-										<li><input type="submit" value="Send Message" class="primary" /></li>
+										<li><input type="button" value="Send Message" class="primary" onclick="sendMessage()" /></li>
 										<li><input type="reset" value="Reset" /></li>
 									</ul>
 								</form>
@@ -382,6 +535,83 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			<script src="assets/js/breakpoints.min.js"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
+			<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 	</body>
 </html>
+
+
+
+<script>
+ function sendMessage()
+ {
+	if  (!(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test($('#email').val())))
+  	{
+		alert("Invalid email address.")
+    	return (false)
+  	};
+
+
+	var content = document.createElement('div');
+	content.innerHTML = "<div class='loader'><span></span><span></span><span></span><span></span><span></span></div>";
+
+	swal({
+		title: "Submitting details ...",
+		content: content,
+		buttons: false,
+		closeOnClickOutside: false
+	});
+  
+	var input = {};
+	input.Name = $('#name').val();
+	input.Email = $('#email').val();
+	input.Message = $('#message').val();
+
+	var url = 'https://emailsender20210718180715danielhein.azurewebsites.net/email';
+
+	$.ajax({ url: url, data: input, dataType: "json", type: "POST", success: 
+		function(data) 
+		{
+			if (data.result)
+			{
+				swal({
+				title: 'Thank you.',
+				text: 'Have a great day and I will get back to you as soon as possible.',
+				timer: 2000,
+				showCancelButton: false,
+				showConfirmButton: false,
+				buttons : false,
+				icon : "success"
+				}).then(
+				function () {},
+				function (dismiss) {if (dismiss === 'timer') {}})
+				location.href = "#";
+			}
+			else 
+			{
+				console.log(data.message);
+				swal({
+				title: 'Failed.',
+				text: 'An unexpected error occurred. Please contact system admin.',
+				timer: 3000,
+				showCancelButton: false,
+				showConfirmButton: false,
+				buttons : false,
+				icon : "error"
+				}).then(
+				function () {},
+				function (dismiss) {if (dismiss === 'timer') {}})
+			}
+			clearForm();
+		}
+	});
+};
+
+function clearForm()
+{
+	$('#name').val('');
+	$('#email').val('');
+	$('#message').val('');
+}
+
+</script>
